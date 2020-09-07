@@ -1,0 +1,11 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~end_position_accuracy" : \b [double] Distance from the final point that counts as the trajectory being complete min: 0.0, default: 0.1, max: std::numeric_limits<double>::infinity()
+- \b "~end_yaw_accuracy" : \b [double] Yaw rotation from the the final point that counts as the trajectory being complete min: 0.0, default: 0.1, max: 6.28318530718
+- \b "~spline_res_per_sec" : \b [int] Amount of points per second to use during the spline approximation feedback min: 0, default: 5, max: 2147483647
+- \b "~use_position_ref" : \b [bool] Enables position reference to be added to the triplet min: False, default: True, max: True
+- \b "~use_velocity_ref" : \b [bool] Enables velocity reference to be added to the triplet min: False, default: True, max: True
+- \b "~use_acceleration_ref" : \b [bool] Enables acceleration reference to be added to the triplet min: False, default: True, max: True
+

@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: pid_controller_lib
+Description: Description of pid_controller_lib
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lpid_controller_lib -lpid_controller_lib_tracking
+Requires: dynamic_reconfigure

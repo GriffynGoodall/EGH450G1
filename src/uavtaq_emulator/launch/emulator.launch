@@ -1,0 +1,16 @@
+<launch>
+	<node pkg="uavtaq_emulator" type="uavtaq_emulator_node" name="emulator" clear_params="true" output="screen">
+		<!-- Connection Parameters -->
+		<param name="topic_image" value="/camera/image_raw" type="str"/>
+
+		<param name="topic_transform" value="transform" type="str"/>
+		<param name="topic_pose" value="pose" type="str"/>
+
+		<param name="topic_rand_occupancy_grid" value="grid_rand" type="str"/>
+		<param name="topic_test_occupancy_grid" value="grid_test" type="str"/>
+
+		<param name="topic_gas_a" value="sensors/gas/a" type="str"/>
+		<param name="topic_gas_b" value="sensors/gas/b" type="str"/>
+		<param name="topic_gas_c" value="sensors/gas/c" type="str"/>
+	</node>
+</launch>

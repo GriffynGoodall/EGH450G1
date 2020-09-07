@@ -1,0 +1,2 @@
+set(contrail_msgs_MESSAGE_FILES "/home/griff/catkin_ws/src/contrail/contrail_msgs/msg/CubicSpline.msg;/home/griff/catkin_ws/src/contrail/contrail_msgs/msg/DiscreteProgress.msg;/home/griff/catkin_ws/src/contrail/contrail_msgs/msg/Waypoint.msg;/home/griff/catkin_ws/src/contrail/contrail_msgs/msg/WaypointList.msg")
+set(contrail_msgs_SERVICE_FILES "/home/griff/catkin_ws/src/contrail/contrail_msgs/srv/SetTracking.srv")

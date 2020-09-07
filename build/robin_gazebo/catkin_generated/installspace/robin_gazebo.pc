@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: robin_gazebo
+Description: Description of robin_gazebo
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp

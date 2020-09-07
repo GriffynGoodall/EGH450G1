@@ -1,0 +1,12 @@
+\subsubsection usage Usage
+\verbatim
+<node name="contrail_manager" pkg="contrail_manager" type="contrail_manager">
+  <param name="end_position_accuracy" type="double" value="0.1" />
+  <param name="end_yaw_accuracy" type="double" value="0.1" />
+  <param name="spline_res_per_sec" type="int" value="5" />
+  <param name="use_position_ref" type="bool" value="True" />
+  <param name="use_velocity_ref" type="bool" value="True" />
+  <param name="use_acceleration_ref" type="bool" value="True" />
+</node>
+\endverbatim
+

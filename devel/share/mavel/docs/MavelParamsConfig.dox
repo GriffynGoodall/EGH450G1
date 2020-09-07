@@ -1,0 +1,14 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~allow_timeout_position" : \b [bool] Allows timeout on position-only reference inputs min: False, default: False, max: True
+- \b "~allow_controller_reset" : \b [bool] Allows for mavel to reset to the pre-armed state if system is disarmed min: False, default: False, max: True
+- \b "~use_tracking_control" : \b [bool] Switches the control scheme to a tracking controller control min: False, default: False, max: True
+- \b "~tilt_max" : \b [double] Maximum tilt angle that can be commanded (rad) min: 0.0, default: 0.39, max: std::numeric_limits<double>::infinity()
+- \b "~throttle_min" : \b [double] Minimum throttle that can be commanded (%) min: 0.0, default: 0.1, max: 1.0
+- \b "~throttle_mid" : \b [double] Midpoint throttle required for stable hover (%) min: 0.0, default: 0.5, max: 1.0
+- \b "~throttle_max" : \b [double] Maximum throttle that can be commanded (%) min: 0.0, default: 0.9, max: 1.0
+- \b "~failsafe_output_on_fatal" : \b [bool] Enables output of the controller if a hard failsafe is declared (default is False: mavel will stop outputting reference commands) min: False, default: False, max: True
+- \b "~failsafe_land_vel" : \b [double] Landing velocity if input reference is lost, but odometry is still available min: -std::numeric_limits<double>::infinity(), default: -0.2, max: 0.0
+

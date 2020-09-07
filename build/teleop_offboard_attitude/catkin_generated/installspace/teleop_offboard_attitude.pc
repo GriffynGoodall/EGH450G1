@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: teleop_offboard_attitude
+Description: Description of teleop_offboard_attitude
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

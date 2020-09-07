@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<launch>
+	<node pkg="mavel" type="mavel_node" name="mavel" clear_params="true" output="screen">
+		<!-- Controller Parameters /-->
+		<rosparam command="load" file="$(find mavel)/launch/mavel_params.yaml"/>
+
+		<!-- Interface Topics /-->
+		<remap from="~command/attitude" to="/mavros/setpoint_raw/attitude"/>
+		<remap from="~state/odometry" to="/odom"/>
+		<remap from="~state/mav_state" to="/mavros/state"/>
+	</node>
+</launch>

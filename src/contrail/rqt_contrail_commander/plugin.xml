@@ -1,0 +1,17 @@
+<library path="src">
+  <class name="Contrail Commander" type="rqt_contrail_commander.commander.Commander" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      A Python-based GUI to issue goto-type commands to contrail
+    </description>
+    <qtgui>
+      <group>
+        <label>QUTAS Tools</label>
+        <icon type="theme">folder</icon>
+        <statustip>Plugins developed as part of the QUTAS Flight Stack.</statustip>
+      </group>
+      <label>Contrail Commander</label>
+      <icon type="theme">media-playback-start</icon>
+      <statustip>Commander panel for easily issuing goto-type commands</statustip>
+    </qtgui>
+  </class>
+</library>

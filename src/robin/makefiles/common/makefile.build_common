@@ -1,0 +1,70 @@
+###############################################################################
+# Things that need to be maintained as the source changes
+#
+#PROJECT_SRC_FILES = $(HERE)/src/drivers/opencm3_naze32_common/led.c
+# Source files common to all targets
+$(TARGET)_SRC = $(PROJECT_SRC_FILES) \
+			    $(PROJECT_SRC_PARAM_GEN) \
+			    $(PROJECT_SRC_LIBFIXMATH) \
+			    $(PROJECT_SRC_LIBFIXMATRIX) \
+			    $(DEVICE_SRC)
+
+###############################################################################
+# Things that might need changing to use different tools
+#
+
+# Tool names
+CC          = $(DEVICE_BUILD_TOOL)
+OBJCOPY	    = $(DEVICE_BUILD_OBJCOPY)
+C_BUILD_VER = gnu11
+
+#
+# Tool options.
+#
+INCLUDE_DIRS = $(ROOT)/include \
+			   $(ROOT)/build \
+			   $(ROOT)/lib \
+			   $(PROJECT_DIR_LIBFIXMATH) \
+			   $(PROJECT_DIR_LIBFIXMATRIX) \
+			   $(DEVICE_INCLUDES)
+
+ifeq ($(DEBUG),GDB)
+OPTIMIZE	 = -Og
+else
+OPTIMIZE	 = -Os -MD
+endif
+
+#XXX: (-Wno-char-subscripts -Wno-sign-compare) used to disable warnings
+#	  in the libfixmath and libfixmatrix compilations
+#XXX: (-Wno-unused-parameter) used to disable warnings
+#	  for driver / generic function parameters
+#XXX: (-Wno-unused-result) used to disable warnings about
+#	  not using return values for some functions
+CFLAGS	 = $(ARCH_FLAGS) \
+		   $(DEBUG_FLAGS) \
+		   $(DEVICE_FLAGS) \
+		   $(DEVICE_CFLAGS) \
+		   $(addprefix -D,$(OPTIONS)) \
+		   $(addprefix -I,$(INCLUDE_DIRS)) \
+		   -Wall -pedantic -Wextra -Wshadow -Wunsafe-loop-optimizations \
+		   -Wno-char-subscripts -Wno-sign-compare -Wno-unused-parameter -Wno-unused-result \
+		   -Wno-address-of-packed-member \
+		   -ffunction-sections \
+		   -fdata-sections \
+		   -D$(TARGET) \
+		   -DGIT_VERSION_FLIGHT_STR=\"$(GIT_VERSION_FLIGHT)\" \
+		   -DGIT_VERSION_OS_STR=\"$(GIT_VERSION_OS)\" \
+		   -DGIT_VERSION_MAVLINK_STR=\"$(GIT_VERSION_MAVLINK)\" \
+		   -DEEPROM_CONF_VERSION_STR=\"$(EEPROM_CONF_VERSION)\" \
+		   -std=$(C_BUILD_VER)
+
+ASFLAGS	= $(ARCH_FLAGS) \
+		  -x assembler-with-cpp \
+		  $(addprefix -I,$(INCLUDE_DIRS))
+
+# XXX Map/crossref output?
+LDFLAGS	= $(ARCH_FLAGS) \
+		  $(DEVICE_FLAGS) \
+		  $(DEBUG_FLAGS) \
+		  $(DEVICE_LDFLAGS) \
+		  --static

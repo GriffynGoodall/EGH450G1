@@ -1,0 +1,9 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~w0" : \b [double] Proportional gain for this controller min: 0.0, default: 0.0, max: std::numeric_limits<double>::infinity()
+- \b "~ki" : \b [double] Integral ratio min: 0.5, default: 0.0, max: std::numeric_limits<double>::infinity()
+- \b "~min" : \b [double] Minimum controller output min: -std::numeric_limits<double>::infinity(), default: -1.0, max: std::numeric_limits<double>::infinity()
+- \b "~max" : \b [double] Maximum controller output min: -std::numeric_limits<double>::infinity(), default: 1.0, max: std::numeric_limits<double>::infinity()
+

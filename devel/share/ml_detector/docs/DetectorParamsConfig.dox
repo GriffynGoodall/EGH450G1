@@ -1,0 +1,25 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~adaptive_thresh_win_size_min" : \b [int]  min: 0, default: 3, max: 2147483647
+- \b "~adaptive_thresh_win_size_max" : \b [int]  min: 0, default: 23, max: 2147483647
+- \b "~adaptive_thresh_win_size_step" : \b [int]  min: 0, default: 10, max: 2147483647
+- \b "~adaptive_thresh_constant" : \b [double]  min: 0.0, default: 7.0, max: std::numeric_limits<double>::infinity()
+- \b "~min_marker_perimeter_rate" : \b [double]  min: 0.0, default: 0.1, max: std::numeric_limits<double>::infinity()
+- \b "~max_marker_perimeter_rate" : \b [double]  min: 0.0, default: 4.0, max: std::numeric_limits<double>::infinity()
+- \b "~polygonal_approx_accuracy_rate" : \b [double]  min: 0.0, default: 0.0075, max: std::numeric_limits<double>::infinity()
+- \b "~min_corner_distance_rate" : \b [double]  min: 0.0, default: 0.05, max: std::numeric_limits<double>::infinity()
+- \b "~min_marker_distance_rate" : \b [double]  min: 0.0, default: 0.05, max: std::numeric_limits<double>::infinity()
+- \b "~min_distance_to_border" : \b [int]  min: 0, default: 10, max: 2147483647
+- \b "~marker_border_bits" : \b [int]  min: 0, default: 1, max: 2147483647
+- \b "~min_otsu_std_dev" : \b [double]  min: 0.0, default: 5.0, max: std::numeric_limits<double>::infinity()
+- \b "~perspective_remove_pixel_per_cell" : \b [int]  min: 0, default: 8, max: 2147483647
+- \b "~perspective_remove_ignored_margin_per_cell" : \b [double]  min: 0.0, default: 0.13, max: std::numeric_limits<double>::infinity()
+- \b "~max_erroneous_bits_in_border_rate" : \b [int]  min: 0, default: 0, max: 2147483647
+- \b "~error_correction_rate" : \b [double]  min: 0.0, default: 0.0, max: std::numeric_limits<double>::infinity()
+- \b "~corner_refinement_method" : \b [int]  min: 0, default: 1, max: 2147483647
+- \b "~corner_refinement_win_size" : \b [int]  min: 0, default: 5, max: 2147483647
+- \b "~corner_refinement_max_iterations" : \b [int]  min: 0, default: 30, max: 2147483647
+- \b "~corner_refinement_min_accuracy" : \b [double]  min: 0.0, default: 0.05, max: std::numeric_limits<double>::infinity()
+

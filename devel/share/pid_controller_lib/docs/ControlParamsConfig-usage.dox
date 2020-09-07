@@ -1,0 +1,11 @@
+\subsubsection usage Usage
+\verbatim
+<node name="pidController" pkg="pid_controller_lib" type="pidController">
+  <param name="p" type="double" value="0.0" />
+  <param name="i" type="double" value="0.0" />
+  <param name="d" type="double" value="0.0" />
+  <param name="min" type="double" value="-1.0" />
+  <param name="max" type="double" value="1.0" />
+</node>
+\endverbatim
+

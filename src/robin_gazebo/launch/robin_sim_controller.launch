@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<launch>
+	<arg name="model_id" default="robin"/>
+
+	<group ns="$(arg model_id)">
+		<!-- HIGH LEVEL CONTROL -->
+		<node pkg="mavel" type="mavel_node" name="mavel"
+		clear_params="true" output="screen">
+			<rosparam command="load" file="$(find robin_gazebo)/config/mavel_sim_params.yaml"/>
+
+			<remap from="~command/attitude" to="mavros/setpoint_raw/attitude"/>
+			<remap from="~state/odometry" to="state/odom"/>
+			<remap from="~state/mav_state" to="mavros/state"/>
+		</node>
+
+		<!-- Feedback for analysis -->
+		<node pkg="mavel" type="odom_triplet_node" name="state_odom_triplet"
+		clear_params="true" output="screen">
+			<remap from="~odom" to="state/odom"/>
+			<remap from="~triplet" to="state/triplet"/>
+		</node>
+	</group>
+</launch>

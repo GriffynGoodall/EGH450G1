@@ -1,0 +1,7 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~pose_ground_height" : \b [double] Sets the altitude for pose_ground inputs min: 0.0, default: 1.0, max: std::numeric_limits<double>::infinity()
+- \b "~output_rate" : \b [double] If 0.0, outputs will only be sent when recieved, if >0.0, inputs will be constantly sent at this rate min: 0.0, default: 0.0, max: std::numeric_limits<double>::infinity()
+

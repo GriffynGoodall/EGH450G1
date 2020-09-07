@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<launch>
+	<node pkg="contrail_manager" type="contrail_guidance_node" name="guidance" clear_params="true" output="screen">
+		<param name="update_rate" value="50.0" />
+		<param name="do_feedback" value="true" />
+
+		<param name="contrail/fallback_to_pose" value="true" />
+		<param name="contrail/spline_res_per_sec" value="5" />
+
+		<param name="contrail/waypoint_hold_duration" value="2.0" />
+		<param name="contrail/waypoint_radius" value="0.1" />
+		<param name="contrail/waypoint_yaw_accuracy" value="0.1" />
+
+		<!--remap from="guidance/command/triplet" to="/triplet" /-->
+		<remap from="~state/odom" to="/odom" />
+	</node>
+</launch>

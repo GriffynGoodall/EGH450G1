@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: uavusr_emulator
+Description: Description of uavusr_emulator
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

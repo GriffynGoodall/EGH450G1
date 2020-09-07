@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<launch>
+	<!-- Navigator Node -->
+	<node pkg="egh450_navigation_interface" type="navigator" name="navigator" clear_params="true" output="screen">
+		<!-- Input to trigger diversion from imagery -->
+		<remap from="~imagery_trigger" to="/imagery_trigger" />
+		<!-- Pose state input of UAV -->
+		<remap from="~pose" to="/emulated_uav/pose" />
+		<!-- Connection to contrail -->
+		<param name="~action_topic" value="/emulated_uav/mavel/contrail" />
+	</node>
+</launch>

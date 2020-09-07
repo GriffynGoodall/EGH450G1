@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/griff/catkin_ws/src/marker_localization/ml_detector/src/ml_dump_dictionary.cpp
+opencv2/aruco.hpp
+-
+opencv2/highgui.hpp
+-
+sstream
+-
+

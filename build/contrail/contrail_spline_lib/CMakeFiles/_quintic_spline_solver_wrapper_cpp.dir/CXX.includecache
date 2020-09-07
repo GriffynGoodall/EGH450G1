@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/griff/catkin_ws/src/contrail/contrail_spline_lib/include/contrail_spline_lib/quintic_spline_solver.h
+contrail_spline_lib/quintic_spline_types.h
+-
+eigen3/Eigen/Dense
+-
+
+/home/griff/catkin_ws/src/contrail/contrail_spline_lib/include/contrail_spline_lib/quintic_spline_types.h
+vector
+-
+
+/home/griff/catkin_ws/src/contrail/contrail_spline_lib/src/contrail_spline_lib/_quintic_spline_solver_wrapper_cpp.cpp
+boost/python.hpp
+-
+contrail_spline_lib/quintic_spline_types.h
+-
+contrail_spline_lib/quintic_spline_solver.h
+-
+vector
+-
+

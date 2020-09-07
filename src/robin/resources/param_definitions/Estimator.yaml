@@ -1,0 +1,121 @@
+PARAM_EST_INIT_TIME:
+  type: "uint"
+  name: "EST_INIT_TIME"
+  description: "Time from boot where the estimator will use quick convergence"
+  reboot: true
+  value:
+    option: "scalar"
+    default: 1000000
+    unit: "us"
+PARAM_EST_USE_HDG_FUSION:
+  type: "uint"
+  name: "EST_FUSE_HDG"
+  description: "Toggle to enable heading fusion, technique will use data in this weighting: ext_pose > vision > mag (0:false,1:true)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 1
+PARAM_EST_USE_LEVEL_HORIZON:
+  type: "uint"
+  name: "EST_LVL_HORZ"
+  description: "Toggle to enable level horizon calibration for the attitude estimation (0:false,1:true)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 1
+PARAM_EST_LEVEL_HORIZON_W:
+  type: "float"
+  name: "EST_LVL_HORZ_W"
+  description: "Level horizon offset quaternion calibration data (W)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 1.0
+PARAM_EST_LEVEL_HORIZON_X:
+  type: "float"
+  name: "EST_LVL_HORZ_X"
+  description: "Level horizon offset quaternion calibration data (X)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.0
+PARAM_EST_LEVEL_HORIZON_Y:
+  type: "float"
+  name: "EST_LVL_HORZ_Y"
+  description: "Level horizon offset quaternion calibration data (Y)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.0
+PARAM_EST_LEVEL_HORIZON_Z:
+  type: "float"
+  name: "EST_LVL_HORZ_Z"
+  description: "Level horizon offset quaternion calibration data (Z)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.0
+PARAM_EST_ACC_KP:
+  type: "float"
+  name: "EST_ACC_KP"
+  description: "Adjusts the proportional gain done on the attitude estimation"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.2
+PARAM_EST_BIAS_KI:
+  type: "float"
+  name: "EST_W_BIAS_KI"
+  description: "Adjusts the amount of integral used for the adaptive bias estimation"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.1
+PARAM_EST_BIAS_MAX:
+  type: "float"
+  name: "EST_W_BIAS_MAX"
+  description: "Maximum for the adaptive bias compensation"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.05
+PARAM_GYRO_ALPHA:
+  type: "float"
+  name: "EST_LPF_GYRO_A"
+  description: "Alpha parameter for gyroscope measurement low pass filter (noise reduction)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.04
+PARAM_ACC_ALPHA:
+  type: "float"
+  name: "EST_LPF_ACC_A"
+  description: "Alpha parameter for gyroscope measurement low pass filter (noise reduction)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.04
+PARAM_EST_MAG_DECL:
+  type: "float"
+  name: "EST_MAG_DECL"
+  description: "Magnetometer declination, use to correct for current latitude on earth"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.0
+PARAM_EST_HDG_P_EXT:
+  type: "float"
+  name: "EST_HDG_P_EXT"
+  description: "Proportional gain for external heading fusion (should be set according to sensor update rate and accuracy)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 10.0
+PARAM_EST_HDG_P_MAG:
+  type: "float"
+  name: "EST_HDG_P_MAG"
+  description: "Proportional gain for magnetometer heading fusion (should be set according to sensor update rate and accuracy)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 5.0

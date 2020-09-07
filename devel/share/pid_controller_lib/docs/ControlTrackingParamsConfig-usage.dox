@@ -1,0 +1,10 @@
+\subsubsection usage Usage
+\verbatim
+<node name="pidTrackingController" pkg="pid_controller_lib" type="pidTrackingController">
+  <param name="w0" type="double" value="0.0" />
+  <param name="ki" type="double" value="0.0" />
+  <param name="min" type="double" value="-1.0" />
+  <param name="max" type="double" value="1.0" />
+</node>
+\endverbatim
+

@@ -1,0 +1,15 @@
+\subsubsection usage Usage
+\verbatim
+<node name="mavel" pkg="mavel" type="mavel">
+  <param name="allow_timeout_position" type="bool" value="False" />
+  <param name="allow_controller_reset" type="bool" value="False" />
+  <param name="use_tracking_control" type="bool" value="False" />
+  <param name="tilt_max" type="double" value="0.39" />
+  <param name="throttle_min" type="double" value="0.1" />
+  <param name="throttle_mid" type="double" value="0.5" />
+  <param name="throttle_max" type="double" value="0.9" />
+  <param name="failsafe_output_on_fatal" type="bool" value="False" />
+  <param name="failsafe_land_vel" type="double" value="-0.2" />
+</node>
+\endverbatim
+

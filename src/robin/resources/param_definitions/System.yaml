@@ -1,0 +1,85 @@
+PARAM_VERSION_FIRMWARE:
+  type: "uint"
+  name: "VERSION_FW"
+  description: "A compile-time stamp for the flight firmware version"
+  reboot: false
+  value:
+    option: "generated"
+    function: "strtoll(GIT_VERSION_FLIGHT_STR, NULL, 16)"
+PARAM_VERSION_SOFTWARE:
+  type: "uint"
+  name: "VERSION_SW"
+  description: "A compile-time stamp for the OS firmware version"
+  reboot: false
+  value:
+    option: "generated"
+    function: "strtoll(GIT_VERSION_OS_STR, NULL, 16)"
+PARAM_RELAXED_PARAM_SET:
+  type: "uint"
+  name: "RELAXED_SET"
+  description: "Allows for 'unit' type parameters to be set when send as 'int' type"
+  reboot: false
+  value:
+    option: "bool"
+    default: 1
+PARAM_SAFETY_BUTTON_HYST:
+  type: "uint"
+  name: "SAFETY_HYST"
+  description: "Duration that the safety button must be pressed for to toggle"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 1000000
+    unit: "us"
+PARAM_FAILSAFE_THROTTLE:
+  type: "float"
+  name: "FAILSAFE_THRTL"
+  description: "Throttle percentage output when in failsafe mode"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.20
+PARAM_THROTTLE_TIMEOUT:
+  type: "uint"
+  name: "TIMEOUT_THRTL"
+  description: "Throttle timeout in to prevent accidentally leaving armed (0 to disable)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 10000000
+    unit: "us"
+PARAM_THROTTLE_TIMEOUT_VALUE:
+  type: "float"
+  name: "TIMEOUT_THRTL_V"
+  description: "Throttle amount that must be reached to cancel the throttle timeout"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.05
+    unit: "%"
+PARAM_CRITICAL_TIMEOUT:
+  type: "uint"
+  name: "TIMEOUT_CRIT_EM"
+  description: "Critical state timeout, system is put into emergency state after this time if not resolved"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 5000000
+    unit: "us"
+PARAM_RESET_PARAMS:
+  type: "uint"
+  name: "SYS_AUTOCONFIG"
+  description: "Tells the system to reset all parameters to default on next boot"
+  reboot: true
+  value:
+    option: "scalar"
+    default: 0
+PARAM_DEBUG_PROFILING:
+  type: "float"
+  name: "DEBUG_PROFILING"
+  description: "Enables subsystem profiling and feedback (in Hz)"
+  reboot: false
+  value:
+    option: "scalar"
+    default: 0.0
+    function: "profiler_init();"

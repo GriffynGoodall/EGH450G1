@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: rqt_contrail_commander
+Description: Description of rqt_contrail_commander
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

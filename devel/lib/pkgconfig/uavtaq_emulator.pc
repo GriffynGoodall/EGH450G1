@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/devel
+
+Name: uavtaq_emulator
+Description: Description of uavtaq_emulator
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

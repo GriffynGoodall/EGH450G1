@@ -1,0 +1,8 @@
+\subsubsection usage Usage
+\verbatim
+<node name="mavel" pkg="mavel" type="mavel">
+  <param name="pose_ground_height" type="double" value="1.0" />
+  <param name="output_rate" type="double" value="0.0" />
+</node>
+\endverbatim
+

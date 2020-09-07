@@ -1,0 +1,10 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~publish_overlay" : \b [bool] Enables publishing of overlay image min: False, default: False, max: True
+- \b "~send_detailed_tag_info" : \b [bool] Enables detailed tag ID information to be shown in the overlay min: False, default: False, max: True
+- \b "~show_rejected" : \b [bool] Overlays potential but rejected markers min: False, default: False, max: True
+- \b "~refine_strategy" : \b [bool] Enables an additional marker refinement step to the detection process min: False, default: False, max: True
+- \b "~camera_is_rectified" : \b [bool] Tells the processor to treat the image as if it is already rectified min: False, default: False, max: True
+

@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/devel
+
+Name: contrail_manager
+Description: Description of contrail_manager
+Version: 0.0.0
+Cflags: -I/home/griff/catkin_ws/devel/include -I/home/griff/catkin_ws/src/contrail/contrail_manager/include -I/usr/include/eigen3
+Libs: -L${prefix}/lib -lcontrail_manager
+Requires: contrail_msgs contrail_spline_lib

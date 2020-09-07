@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/install
+
+Name: contrail_msgs
+Description: Description of contrail_msgs
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

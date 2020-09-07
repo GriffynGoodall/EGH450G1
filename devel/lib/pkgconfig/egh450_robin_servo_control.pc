@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/devel
+
+Name: egh450_robin_servo_control
+Description: Description of egh450_robin_servo_control
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

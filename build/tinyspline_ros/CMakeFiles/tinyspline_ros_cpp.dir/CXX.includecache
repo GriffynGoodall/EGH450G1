@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/griff/catkin_ws/src/tinyspline_ros/include/tinyspline_ros/tinyspline.h
+stddef.h
+-
+
+/home/griff/catkin_ws/src/tinyspline_ros/include/tinyspline_ros/tinysplinecpp.h
+tinyspline_ros/tinyspline.h
+-
+vector
+-
+string
+-
+
+/home/griff/catkin_ws/src/tinyspline_ros/src/tinyspline_ros/tinysplinecpp.cpp
+tinyspline_ros/tinysplinecpp.h
+-
+stdexcept
+-
+cstdio
+-
+

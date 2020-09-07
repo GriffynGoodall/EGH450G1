@@ -1,0 +1,8 @@
+prefix=/home/griff/catkin_ws/devel
+
+Name: contrail_spline_lib
+Description: Description of contrail_spline_lib
+Version: 0.0.0
+Cflags: -I/home/griff/catkin_ws/src/contrail/contrail_spline_lib/include -I/usr/include/eigen3
+Libs: -L${prefix}/lib -lquintic_spline
+Requires: roscpp

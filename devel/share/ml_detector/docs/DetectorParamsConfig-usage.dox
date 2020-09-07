@@ -1,0 +1,26 @@
+\subsubsection usage Usage
+\verbatim
+<node name="ml_detector" pkg="ml_detector" type="ml_detector">
+  <param name="adaptive_thresh_win_size_min" type="int" value="3" />
+  <param name="adaptive_thresh_win_size_max" type="int" value="23" />
+  <param name="adaptive_thresh_win_size_step" type="int" value="10" />
+  <param name="adaptive_thresh_constant" type="double" value="7.0" />
+  <param name="min_marker_perimeter_rate" type="double" value="0.1" />
+  <param name="max_marker_perimeter_rate" type="double" value="4.0" />
+  <param name="polygonal_approx_accuracy_rate" type="double" value="0.0075" />
+  <param name="min_corner_distance_rate" type="double" value="0.05" />
+  <param name="min_marker_distance_rate" type="double" value="0.05" />
+  <param name="min_distance_to_border" type="int" value="10" />
+  <param name="marker_border_bits" type="int" value="1" />
+  <param name="min_otsu_std_dev" type="double" value="5.0" />
+  <param name="perspective_remove_pixel_per_cell" type="int" value="8" />
+  <param name="perspective_remove_ignored_margin_per_cell" type="double" value="0.13" />
+  <param name="max_erroneous_bits_in_border_rate" type="int" value="0" />
+  <param name="error_correction_rate" type="double" value="0.0" />
+  <param name="corner_refinement_method" type="int" value="1" />
+  <param name="corner_refinement_win_size" type="int" value="5" />
+  <param name="corner_refinement_max_iterations" type="int" value="30" />
+  <param name="corner_refinement_min_accuracy" type="double" value="0.05" />
+</node>
+\endverbatim
+

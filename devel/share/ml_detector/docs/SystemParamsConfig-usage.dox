@@ -1,0 +1,11 @@
+\subsubsection usage Usage
+\verbatim
+<node name="ml_detector_node" pkg="ml_detector" type="ml_detector_node">
+  <param name="publish_overlay" type="bool" value="False" />
+  <param name="send_detailed_tag_info" type="bool" value="False" />
+  <param name="show_rejected" type="bool" value="False" />
+  <param name="refine_strategy" type="bool" value="False" />
+  <param name="camera_is_rectified" type="bool" value="False" />
+</node>
+\endverbatim
+
