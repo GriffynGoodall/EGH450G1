@@ -3,11 +3,11 @@
 	<!-- Navigator Node -->
 	<node pkg="egh450g1_code" type="planner" name="planner" clear_params="true" output="screen">
 	<!--node pkg="egh450_path_planning" type="planner" name="planner" clear_params="true" output="screen"-->
-		<param name="goal_start_x" value="-1.5"/>
-		<param name="goal_start_y" value="-1.5"/>
+		<!-- <param name="goal_start_x" value="0"/>
+		<param name="goal_start_y" value="0"/>
 		<param name="goal_end_x" value="1.5"/>
-		<param name="goal_end_y" value="1.5"/>
-		<param name="goal_height" value="1.5"/>
+		<param name="goal_end_y" value="-1.5"/>
+		<param name="goal_height" value="1.5"/> -->
 
 		<!-- These topics need to be remapped correctly! -->
 		<!-- Input to contrail for path tracking -->
