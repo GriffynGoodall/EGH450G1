@@ -1,0 +1,5 @@
+EGH450G1 Code Instructions for Da Vinci
+
+1. Run roscore and the qutas environment (QUTAS Wiki for First Flight)
+2. Find rostopics for contrail and breadcrumb
+3. Change the contrail and breadcrumb directory for the egh450g1_planner file

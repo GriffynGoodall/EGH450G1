@@ -848,6 +848,12 @@ egh450_target_solvepnp_BINARY_DIR:STATIC=/home/griff/catkin_ws/build/egh450_targ
 //Value Computed by CMake
 egh450_target_solvepnp_SOURCE_DIR:STATIC=/home/griff/catkin_ws/src/egh450_target_solvepnp
 
+//Value Computed by CMake
+egh450g1_code_BINARY_DIR:STATIC=/home/griff/catkin_ws/build/egh450g1_code
+
+//Value Computed by CMake
+egh450g1_code_SOURCE_DIR:STATIC=/home/griff/catkin_ws/src/egh450g1_code
+
 //The directory containing a CMake configuration file for gazebo.
 gazebo_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/gazebo
 
@@ -1516,7 +1522,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=32
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=33
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
