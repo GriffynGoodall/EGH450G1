@@ -2,13 +2,11 @@
 
 import sys
 import rospy
-#from egh450_path_planning.path_planner import PathPlanner
 from egh450g1_code.path_planner import PathPlanner
 
 if __name__ == '__main__':
 	# Initialize
 	rospy.init_node('egh450g1_code', anonymous=True)
-	# rospy.init_node('egh450_path_planning', anonymous=True)
 
 	nav = None
 

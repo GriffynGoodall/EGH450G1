@@ -1,5 +1,14 @@
 EGH450G1 Code Instructions for Da Vinci
 
 1. Run roscore and the qutas environment (QUTAS Wiki for First Flight)
-2. Find rostopics for contrail and breadcrumb
-3. Change the contrail and breadcrumb directory for the egh450g1_planner file
+2. Find rostopics for contrail, breadcrumb, grid, etc
+3. Change these directory in the egh450g1_planner file
+4. Check contrail vs contrail_manager in path_planner file
+
+
+Launch Commands (emulator):
+roscore
+roslaunch uavusr_emulator emulator.launch
+rviz
+roslaunch egh450g1_code egh450g1_planner.launch
+rostopic pub -1 /imagery_trigger std_msgs/Empty "{}" 
