@@ -27,10 +27,10 @@ failsafe_land_vel: -0.2
 # Data Stream
 min_rate:
   state:
-    state: 0.1
-    odometry: 2.0
+    state: 0.05
+    odometry: 1.0
   reference:
-    triplet: 2.0
+    triplet: 1.0
 
 # PID Controllers
 control:

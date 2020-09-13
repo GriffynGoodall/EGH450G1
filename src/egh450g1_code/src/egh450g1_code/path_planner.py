@@ -17,15 +17,50 @@ from breadcrumb.srv import RequestPathRequest
 
 class PathPlanner():
 	def __init__(self):
-		# Define Waypoints
-		self.waypoints = [[0.0, 0.0, 1.5, 0.0], [0.5, 0.2, 1.5, 0.0], [0.0, -0.5, 1.5, 0.0],\
-			[0.0, 0.0, 1.5, 0.0], [0.0, 0.0, 0.0, 0.0]]
+		# Define waypoint parameters
+		squareSize = 3.0
+		trackWidth = 1.0
+		passes = int(ceil(squareSize/trackWidth) + 1)
+		self.height = 1.5
+		self.yaw = 0.0
+		self.lvl = 0.2
+		
+		# Create empty waypoint array
+		self.waypoints = [[0] * 4 for i in range(passes*2)]
+
+		# Cycle through each pass
+		for i in range(passes):
+			# If last pass is out of bounds, cap it
+			if i*trackWidth > squareSize:
+				x = squareSize/2
+			else:
+				x = -squareSize/2 + i*trackWidth
+
+			# Alternate between up and down pass
+			if i % 2 == 0:
+				y1 = -squareSize/2
+				y2 = squareSize/2
+			else:
+				y1 = squareSize/2
+				y2 = -squareSize/2
+
+			# Add waypoints
+			self.waypoints[i*2] = [x, y1, self.height, self.yaw]
+			self.waypoints[i*2+1] = [x, y2, self.height, self.yaw]
+
+		# Add starting waypoints and ending waypoints	
+		self.waypoints.insert(0, [0, 0, self.height, self.yaw])
+		#self.waypoints.insert(0, [0, 0, 0, yaw])
+
+		self.waypoints.append([0, 0, self.height, self.yaw])
+		#self.waypoints.append([0, 0, 0, yaw])
+
+			
+		# self.waypoints = [[0.0, 0.0, 1.5, 0.0], [0.5, 0.2, 1.5, 0.0], [0.0, -0.5, 1.5, 0.0],\
+		# 	[0.0, 0.0, 1.5, 0.0], [0.0, 0.0, 0.0, 0.0]]
 
 		self.wpIndex = 0
 		self.cont = 0
-		# self.current_pos.x = 0
-		# self.current_pos.y = 0
-		# self.current_pos.z = 0
 
 		# Wait for the breadcrumb interface to start up
 		# then prepare a Service Client
@@ -44,10 +79,8 @@ class PathPlanner():
 		self.sub_trig = rospy.Subscriber('~imagery_trigger', Empty, self.callback_trigger)
 		self.sub_pose = rospy.Subscriber('~pose', PoseStamped, self.callback_pose)
 
-		# self.send_wp_path(self.p_start, self.yaw_start, self.p_end, self.yaw_end, self.nom_lvel)
-
 		# Call path function using current waypoint index
-		#self.current_pos = Vector3(msg_in.pose.position.x, msg_in.pose.position.y, msg_in.pose.position.z)
+		self.takeoff()
 		self.request_path()
 
 	def shutdown(self):
@@ -66,11 +99,14 @@ class PathPlanner():
 
 		# Set break flag, and sleep
 		self.cont = 1
+		# self.wpIndex = self.wpIndex - 1
 		self.client_base.cancel_goal()
+
+		# Note, only safety is the fact that other request_path instance should end in 10s
 		rospy.sleep(rospy.Duration(10.0))
 
 		rospy.loginfo("[NAV] Continuing on path...")
-		
+
 		self.request_path()
 
 	def path_display(self, path, start, end):
@@ -113,7 +149,15 @@ class PathPlanner():
 	def request_path(self):
 		# Loop through list of waypoints
 		while self.wpIndex < len(self.waypoints)-1:
-
+		
+			if self.cont != 0:
+				self.waypoints[i][0] = self.current_pos.x
+				self.waypoints[i][1] = self.current_pos.y
+				self.waypoints[i][2] = self.current_pos.z
+				# self.wpIndex = self.wpIndex + 1
+				self.cont = 0
+				return
+				
 			#Request a path from breadcrumb
 			req = RequestPathRequest()
 
@@ -153,7 +197,18 @@ class PathPlanner():
 						goal_base.positions.append(res.path_sparse.poses[j+1].position)
 						goal_base.yaws.append(0.0)
 
-						goal_base.duration = rospy.Duration.from_sec(10)
+						# Find proportional time
+						dx = res.path_sparse.poses[j+1].position.x - res.path_sparse.poses[j].position.x
+						dy = res.path_sparse.poses[j+1].position.y - res.path_sparse.poses[j].position.y
+						dz = res.path_sparse.poses[j+1].position.z - res.path_sparse.poses[j].position.z
+						dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+
+						# Include safety catch
+						if dt < 5:
+							dt = 5
+						
+						goal_base.duration = rospy.Duration.from_sec(dt)
+						# goal_base.duration = rospy.Duration.from_sec(10) 
 
 						# Set a start time to be "start imidiately"
 						goal_base.start = rospy.Time(0)
@@ -162,18 +217,61 @@ class PathPlanner():
 						self.client_base.send_goal(goal_base)
 						self.client_base.wait_for_result()
 
-					# If flag has been set: change waypoints and exit
+					# If flag has been set, break out
 					else:
-						self.waypoints[i][0] = self.current_pos.x
-						self.waypoints[i][1] = self.current_pos.y
-						self.waypoints[i][2] = self.current_pos.z
-						self.cont = 0	
-						return
-				
-				# Increment index if breadcrumb path successfully finished
-				self.wpIndex = self.wpIndex + 1
-				
+						break;		
 
 			else:
 				rospy.logerr("[NAV] No path received, abandoning planning")
 				return;
+
+			# Increment index
+			if self.cont == 0:
+				self.wpIndex = self.wpIndex + 1
+
+		self.land()
+
+
+	def takeoff(self):
+		# Function to send takeoff directly to contrail
+		goal_base = TrajectoryGoal()
+
+		start = Vector3(x=0.0,y=0.0,z=0.0)
+		end = Vector3(x=0.0,y=0.0,z=self.height)
+
+		goal_base.positions.append(start)
+		goal_base.positions.append(end)
+		goal_base.yaws.append(self.yaw)
+		goal_base.yaws.append(self.yaw)
+
+		dx = end.x - start.x
+		dy = end.y - start.y
+		dz = end.z - start.z
+		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+		goal_base.duration = rospy.Duration.from_sec(dt)
+
+		goal_base.start = rospy.Time(0)
+		self.client_base.send_goal(goal_base)
+		self.client_base.wait_for_result()
+
+	def land(self):
+		# Function to send land directly to contrail
+		goal_base = TrajectoryGoal()
+
+		start = Vector3(x=0.0,y=0.0,z=self.height)
+		end = Vector3(x=0.0,y=0.0,z=0.0)
+
+		goal_base.positions.append(start)
+		goal_base.positions.append(end)
+		goal_base.yaws.append(self.yaw)
+		goal_base.yaws.append(self.yaw)
+
+		dx = end.x - start.x
+		dy = end.y - start.y
+		dz = end.z - start.z
+		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+		goal_base.duration = rospy.Duration.from_sec(dt)
+
+		goal_base.start = rospy.Time(0)
+		self.client_base.send_goal(goal_base)
+		self.client_base.wait_for_result()
