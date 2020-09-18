@@ -39,7 +39,25 @@
   <!--   <run_depend>message_runtime</run_depend> -->
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
+
+  <license>TODO</license>
+
+
   <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+
+  <!-- <run_depend>std_msgs</run_depend> -->
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>mavros_msgs</run_depend>
+  <!-- <run_depend>geometry_msgs</run_depend> -->
+  <run_depend>visualization_msgs</run_depend>
+  <!-- <run_depend>nav_msgs</run_depend> -->
+  <run_depend>roscpp</run_depend>
+
+  <!-- <buildtool_depend>catkin</buildtool_depend> -->
 
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>

@@ -23,7 +23,7 @@ class PathPlanner():
 		passes = int(ceil(squareSize/trackWidth) + 1)
 		self.height = 1.5
 		self.yaw = 0.0
-		self.lvl = 0.2
+		self.lvl = 0.1
 		
 		# Create empty waypoint array
 		self.waypoints = [[0] * 4 for i in range(passes*2)]
@@ -50,17 +50,17 @@ class PathPlanner():
 
 		# Add starting waypoints and ending waypoints	
 		self.waypoints.insert(0, [0, 0, self.height, self.yaw])
-		#self.waypoints.insert(0, [0, 0, 0, yaw])
+		self.waypoints.insert(0, [0, 0, 0, self.yaw])
 
 		self.waypoints.append([0, 0, self.height, self.yaw])
-		#self.waypoints.append([0, 0, 0, yaw])
+		self.waypoints.append([0, 0, -0.2, self.yaw])
 
-			
+		# Manual Waypoints	
 		# self.waypoints = [[0.0, 0.0, 1.5, 0.0], [0.5, 0.2, 1.5, 0.0], [0.0, -0.5, 1.5, 0.0],\
 		# 	[0.0, 0.0, 1.5, 0.0], [0.0, 0.0, 0.0, 0.0]]
 
 		self.wpIndex = 0
-		self.cont = 0
+		self.stop = 0
 
 		# Wait for the breadcrumb interface to start up
 		# then prepare a Service Client
@@ -80,7 +80,6 @@ class PathPlanner():
 		self.sub_pose = rospy.Subscriber('~pose', PoseStamped, self.callback_pose)
 
 		# Call path function using current waypoint index
-		self.takeoff()
 		self.request_path()
 
 	def shutdown(self):
@@ -88,8 +87,8 @@ class PathPlanner():
 		self.sub_trig.unregister()
 		self.sub_pose.unregister()
 
+	# Callback to store the current position at all times so it can be accessed later
 	def callback_pose(self, msg_in):
-		# Store the current position at all times so it can be accessed later
 		self.current_pos = Vector3(msg_in.pose.position.x, msg_in.pose.position.y, msg_in.pose.position.z)
 
 	# Callback to handle an alert from image processing that the target is found
@@ -98,17 +97,18 @@ class PathPlanner():
 		rospy.loginfo("[NAV] Stopping for 10 seconds")
 
 		# Set break flag, and sleep
-		self.cont = 1
-		# self.wpIndex = self.wpIndex - 1
+		self.stop = 1
 		self.client_base.cancel_goal()
 
-		# Note, only safety is the fact that other request_path instance should end in 10s
+		# Note: only safety is the fact that other request_path instance should end in 10s
 		rospy.sleep(rospy.Duration(10.0))
 
 		rospy.loginfo("[NAV] Continuing on path...")
 
+		# Continue on path
 		self.request_path()
 
+	# Function  to handle an alert from image processing that the target is found
 	def path_display(self, path, start, end):
 		msg_out = Path()
 		msg_out.header = path.header
@@ -150,128 +150,107 @@ class PathPlanner():
 		# Loop through list of waypoints
 		while self.wpIndex < len(self.waypoints)-1:
 		
-			if self.cont != 0:
+			if self.stop != 0:
 				self.waypoints[i][0] = self.current_pos.x
 				self.waypoints[i][1] = self.current_pos.y
 				self.waypoints[i][2] = self.current_pos.z
-				# self.wpIndex = self.wpIndex + 1
-				self.cont = 0
+				self.stop = 0
 				return
-				
-			#Request a path from breadcrumb
-			req = RequestPathRequest()
 
 			# Get required waypoints
 			i = self.wpIndex
-			req.start.x = self.waypoints[i][0]
-			req.start.y = self.waypoints[i][1]
-			req.start.z = self.waypoints[i][2]
-			req.end.x = self.waypoints[i+1][0]
-			req.end.y = self.waypoints[i+1][1]
-			req.end.z = self.waypoints[i+1][2]				
+			x1 = self.waypoints[i][0]
+			y1 = self.waypoints[i][1]
+			z1 = self.waypoints[i][2]
+			x2 = self.waypoints[i+1][0]
+			y2 = self.waypoints[i+1][1]
+			z2 = self.waypoints[i+1][2]		
 
-			# Send breadcrumb service request
-			res = self.srvc_bc(req)
+			# If no x or y movement, send manually to contrail (breadcrumb will fail)
+			if x1 == x2 and y1 == y2:
+				goal_base = TrajectoryGoal()
 
-			# XXX: You could also use res.path_sparse (see breadcrumb docs)
-			# if len(res.path.poses) > 0:
-			if len(res.path_sparse.poses) > 0:
-				rospy.loginfo("[NAV] Path planned, preparing to transmit")
-				# self.path_display(res.path, req.start, req.end)
-				self.path_display(res.path_sparse, req.start, req.end)
+				start = Vector3(x=x1,y=y1,z=z1)
+				end = Vector3(x=x2,y=y2,z=z2)
 
-				#for j in xrange(len(res.path.poses) - 1):
-				for j in xrange(len(res.path_sparse.poses) - 1):
-					# If no continue flag has been set, continue
-					if self.cont == 0:
-						# Build new goal message
-						# https://github.com/qutas/contrail/blob/master/contrail/action/Trajectory.action
-						goal_base = TrajectoryGoal()
+				goal_base.positions.append(start)
+				goal_base.positions.append(end)
+				goal_base.yaws.append(self.yaw)
+				goal_base.yaws.append(self.yaw)
 
-						# Start point
-						# goal_base.positions.append(res.path.poses[j].position)
-						goal_base.positions.append(res.path_sparse.poses[j].position)
-						goal_base.yaws.append(0.0)
-						# End point
-						# goal_base.positions.append(res.path.poses[j+1].position)
-						goal_base.positions.append(res.path_sparse.poses[j+1].position)
-						goal_base.yaws.append(0.0)
+				dx = end.x - start.x
+				dy = end.y - start.y
+				dz = end.z - start.z
+				dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+				goal_base.duration = rospy.Duration.from_sec(dt)
 
-						# Find proportional time
-						dx = res.path_sparse.poses[j+1].position.x - res.path_sparse.poses[j].position.x
-						dy = res.path_sparse.poses[j+1].position.y - res.path_sparse.poses[j].position.y
-						dz = res.path_sparse.poses[j+1].position.z - res.path_sparse.poses[j].position.z
-						dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+				goal_base.start = rospy.Time(0)
+				self.client_base.send_goal(goal_base)
+				self.client_base.wait_for_result()
 
-						# Include safety catch
-						if dt < 5:
-							dt = 5
-						
-						goal_base.duration = rospy.Duration.from_sec(dt)
-						# goal_base.duration = rospy.Duration.from_sec(10) 
+			else:	
+				#Request a path from breadcrumb
+				req = RequestPathRequest()
 
-						# Set a start time to be "start imidiately"
-						goal_base.start = rospy.Time(0)
+				# Set required waypoints for breadcrumb
+				req.start.x = x1
+				req.start.y = y1
+				req.start.z = z1
+				req.end.x = x2
+				req.end.y = y2
+				req.end.z = z2			
 
-						# Transmit the goal to contrail
-						self.client_base.send_goal(goal_base)
-						self.client_base.wait_for_result()
+				# Send breadcrumb service request
+				res = self.srvc_bc(req)
 
-					# If flag has been set, break out
-					else:
-						break;		
+				# Use path_sparse when requesting from breadcrumb
+				if len(res.path_sparse.poses) > 0:
+					rospy.loginfo("[NAV] Path planned, preparing to transmit")
+					self.path_display(res.path_sparse, req.start, req.end)
 
-			else:
-				rospy.logerr("[NAV] No path received, abandoning planning")
-				return;
+					# Travel to each waypoint in the breadcrumb path
+					for j in xrange(len(res.path_sparse.poses) - 1):
+						# If no continue flag has been set, continue
+						if self.stop == 0:
+							# Build new goal message
+							goal_base = TrajectoryGoal()
+
+							# Start point
+							goal_base.positions.append(res.path_sparse.poses[j].position)
+							goal_base.yaws.append(0.0)
+
+							# End point
+							goal_base.positions.append(res.path_sparse.poses[j+1].position)
+							goal_base.yaws.append(0.0)
+
+							# Find proportional time
+							dx = res.path_sparse.poses[j+1].position.x - res.path_sparse.poses[j].position.x
+							dy = res.path_sparse.poses[j+1].position.y - res.path_sparse.poses[j].position.y
+							dz = res.path_sparse.poses[j+1].position.z - res.path_sparse.poses[j].position.z
+							dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+
+							# Include safety catch
+							if dt < 5:
+								dt = 5
+							
+							# Apply time to goal
+							goal_base.duration = rospy.Duration.from_sec(dt)
+
+							# Set a start time to be "start immediately"
+							goal_base.start = rospy.Time(0)
+
+							# Transmit the goal to contrail
+							self.client_base.send_goal(goal_base)
+							self.client_base.wait_for_result()
+
+						# If flag has been set, break out
+						else:
+							break;		
+
+				else:
+					rospy.logerr("[NAV] No path received, abandoning planning")
+					return;
 
 			# Increment index
-			if self.cont == 0:
+			if self.stop == 0:
 				self.wpIndex = self.wpIndex + 1
-
-		self.land()
-
-
-	def takeoff(self):
-		# Function to send takeoff directly to contrail
-		goal_base = TrajectoryGoal()
-
-		start = Vector3(x=0.0,y=0.0,z=0.0)
-		end = Vector3(x=0.0,y=0.0,z=self.height)
-
-		goal_base.positions.append(start)
-		goal_base.positions.append(end)
-		goal_base.yaws.append(self.yaw)
-		goal_base.yaws.append(self.yaw)
-
-		dx = end.x - start.x
-		dy = end.y - start.y
-		dz = end.z - start.z
-		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
-		goal_base.duration = rospy.Duration.from_sec(dt)
-
-		goal_base.start = rospy.Time(0)
-		self.client_base.send_goal(goal_base)
-		self.client_base.wait_for_result()
-
-	def land(self):
-		# Function to send land directly to contrail
-		goal_base = TrajectoryGoal()
-
-		start = Vector3(x=0.0,y=0.0,z=self.height)
-		end = Vector3(x=0.0,y=0.0,z=0.0)
-
-		goal_base.positions.append(start)
-		goal_base.positions.append(end)
-		goal_base.yaws.append(self.yaw)
-		goal_base.yaws.append(self.yaw)
-
-		dx = end.x - start.x
-		dy = end.y - start.y
-		dz = end.z - start.z
-		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
-		goal_base.duration = rospy.Duration.from_sec(dt)
-
-		goal_base.start = rospy.Time(0)
-		self.client_base.send_goal(goal_base)
-		self.client_base.wait_for_result()

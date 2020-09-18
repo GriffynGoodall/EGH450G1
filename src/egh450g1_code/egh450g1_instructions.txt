@@ -1,14 +1,35 @@
 EGH450G1 Code Instructions for Da Vinci
 
-1. Run roscore and the qutas environment (QUTAS Wiki for First Flight)
-2. Find rostopics for contrail, breadcrumb, grid, etc
-3. Change these directory in the egh450g1_planner file
-4. Check contrail vs contrail_manager in path_planner file
+Testing Square Waypoints (or another waypoint map):
+1. Run Launch Commands (Da Vinci Square)
+
+Testing Nav Code
+1. Copy and replace egh450g1_planner.launch and path_planner.py
+2. Run roscore and the qutas environment (QUTAS Wiki for First Flight)
+3. Find rostopics for contrail, breadcrumb, grid, and pose, check matching in egh450g1_planner file
+4. Run Launch Commands (Nav Code)
 
 
-Launch Commands (emulator):
+Launch Commands (Da Vinci Square):
+roscore
+roslaunch qutas_lab_450 environment.launch
+rqt
+roslaunch ~/catkin_ws/launch/px4.launch
+roslaunch ~/catkin_ws/launch/control.launch
+roslaunch egh450g1_code egh450g1_test.launch wp_name:=XXXX
+
+Launch Commands (Nav Code):
+roscore
+roslaunch qutas_lab_450 environment.launch
+rqt
+roslaunch ~/catkin_ws/launch/px4.launch
+roslaunch ~/catkin_ws/launch/control.launch
+roslaunch egh450g1_code egh450g1_planner.launch
+rostopic pub -1 /imagery_trigger std_msgs/Empty "{}" 
+
+Launch Commands (Emulator):
 roscore
 roslaunch uavusr_emulator emulator.launch
 rviz
-roslaunch egh450g1_code egh450g1_planner.launch
+roslaunch egh450g1_code egh450g1_plannerEm.launch
 rostopic pub -1 /imagery_trigger std_msgs/Empty "{}" 
