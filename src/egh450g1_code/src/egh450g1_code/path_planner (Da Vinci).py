@@ -75,7 +75,7 @@ class PathPlanner():
 
 		# Needs to be connected to contrail
 		self.pub_path = rospy.Publisher('~planned_path', Path, queue_size=10, latch=True)
-		self.pub_im_pose = rospy.Publisher('/imagery_pose', PoseStamped, queue_size=10, latch=True)
+		#self.pub_im_pose = rospy.Publisher('/imagery_pose', PoseStamped, queue_size=10, latch=True)
 
 		# Set up subscribers
 		self.sub_trig = rospy.Subscriber('~imagery_trigger', Empty, self.callback_trigger)
@@ -93,7 +93,7 @@ class PathPlanner():
 	# Callback to store the current position at all times so it can be accessed later
 	def callback_pose(self, msg_in):
 		self.current_pos = Vector3(msg_in.pose.position.x, msg_in.pose.position.y, msg_in.pose.position.z)
-		self.im_msg = msg_in
+		#self.im_msg = msg_in
 
 	# Callback to store the imagery position at all times so it can be accessed later
 	def callback_im_pose(self, msg_in):
@@ -110,9 +110,9 @@ class PathPlanner():
 		self.client_base.cancel_goal()
 
 		# Publish new pose
-		self.im_msg.pose.position.x = self.im_msg.pose.position.x + 0.2
-		self.im_msg.pose.position.y = self.im_msg.pose.position.y + 0.2
-		self.pub_im_pose.publish(self.im_msg)
+		#self.im_msg.pose.position.x = self.im_msg.pose.position.x + 0.2
+		#self.im_msg.pose.position.y = self.im_msg.pose.position.y + 0.2
+		#self.pub_im_pose.publish(self.im_msg)
 
 		# Send imagery pose directly to contrail
 		# Note: only safety is the fact that other request_path instance should end in 2s
@@ -145,8 +145,8 @@ class PathPlanner():
 		self.client_base.wait_for_result()
 
 		# Wait for 10s at location
-		rospy.loginfo("[NAV] Stopping for 10 seconds")
-		rospy.sleep(rospy.Duration(10.0))
+		rospy.loginfo("[NAV] Stopping for 5 seconds")
+		rospy.sleep(rospy.Duration(5.0))
 
 		# Send return pose directly to contrail
 		rospy.loginfo("[NAV] Moving back to normal path")
@@ -218,7 +218,7 @@ class PathPlanner():
 		# Loop through list of waypoints
 		while self.wpIndex < len(self.waypoints)-1:
 
-			# Flag for skipping waypoint incrementation
+			# Flags for skipping waypoint incrementation
 			self.skip = 0
 		
 			if self.stop != 0:
@@ -239,11 +239,6 @@ class PathPlanner():
 
 			# If no x or y movement, send manually to contrail (breadcrumb will fail)
 			if x1 == x2 and y1 == y2:
-				# if z1 == z2:
-				# 	# No movement at all, move on
-				# 	self.wpIndex = self.wpIndex + 1
-				# 	continue
-				# else:
 				goal_base = TrajectoryGoal()
 
 				start = Vector3(x=x1,y=y1,z=z1)

@@ -5,9 +5,11 @@ Testing Square Waypoints (or another waypoint map):
 
 Testing Nav Code
 1. Get surveillance pattern and path duration
-2. Copy and replace path_planner.py, reset pattern and ALL durations
-3. Add extra topic to egh450g1_planner.launch (see messenger snapshot)
-4. Run Launch Commands (Nav Code)
+2. Copy and replace path_planner.py with path_planner (Da Vinci).py, reset pattern and ALL durations
+3. Check surveillance pattern will not be located inside obstacle
+4. Add extra topic to egh450g1_planner.launch (see messenger snapshot)
+5. Run Launch Commands (Nav Code)
+6. *** Change Waypoint capture conditions ***
 
 
 Launch Commands (Da Vinci Square):
