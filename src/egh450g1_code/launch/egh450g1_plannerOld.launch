@@ -11,8 +11,6 @@
 
 		<!-- Input to trigger diversion from imagery -->
 		<remap from="~imagery_trigger" to="/imagery_trigger" />
-		<!-- Input pose from imagery -->
-		<remap from="~imagery_pose" to="/imagery_pose" />
 		<!-- Pose state input of UAV -->
 		<remap from="~pose" to="/emulated_uav/pose" />
 	</node>

@@ -74,12 +74,10 @@ class PathPlanner():
 
 		# Needs to be connected to contrail
 		self.pub_path = rospy.Publisher('~planned_path', Path, queue_size=10, latch=True)
-		self.pub_im_pose = rospy.Publisher('/imagery_pose', PoseStamped, queue_size=10, latch=True)
 
 		# Set up subscribers
 		self.sub_trig = rospy.Subscriber('~imagery_trigger', Empty, self.callback_trigger)
 		self.sub_pose = rospy.Subscriber('~pose', PoseStamped, self.callback_pose)
-		self.sub_im_pose = rospy.Subscriber('~imagery_pose', PoseStamped, self.callback_im_pose)
 
 		# Call path function using current waypoint index
 		self.request_path()
@@ -92,83 +90,18 @@ class PathPlanner():
 	# Callback to store the current position at all times so it can be accessed later
 	def callback_pose(self, msg_in):
 		self.current_pos = Vector3(msg_in.pose.position.x, msg_in.pose.position.y, msg_in.pose.position.z)
-		self.im_msg = msg_in
-
-	# Callback to store the imagery position at all times so it can be accessed later
-	def callback_im_pose(self, msg_in):
-		self.current_im_pos = Vector3(msg_in.pose.position.x, msg_in.pose.position.y, msg_in.pose.position.z)
 
 	# Callback to handle an alert from image processing that the target is found
 	def callback_trigger(self, msg_in):
 		rospy.loginfo("[NAV] Got imagery trigger!")
+		rospy.loginfo("[NAV] Stopping for 10 seconds")
 
-		rospy.loginfo("[NAV] Moving to found location")
-
-		# Set break flag and cancel goal
+		# Set break flag, and sleep
 		self.stop = 1
 		self.client_base.cancel_goal()
 
-		# Publish new pose
-		self.im_msg.pose.position.x = self.im_msg.pose.position.x + 0.2
-		self.im_msg.pose.position.y = self.im_msg.pose.position.y + 0.2
-		self.pub_im_pose.publish(self.im_msg)
-
-		# Send imagery pose directly to contrail
-		# Note: only safety is the fact that other request_path instance should end in 2s
-		rospy.sleep(rospy.Duration(2.0))
-		goal_base = TrajectoryGoal()
-
-		x1 = self.current_pos.x
-		y1 = self.current_pos.y
-		z1 = self.current_pos.z
-		x2 = self.current_im_pos.x
-		y2 = self.current_im_pos.y
-		z2 = self.current_im_pos.z
-
-		start = Vector3(x=x1,y=y1,z=z1)
-		end = Vector3(x=x2,y=y2,z=z2)
-
-		goal_base.positions.append(start)
-		goal_base.positions.append(end)
-		goal_base.yaws.append(self.yaw)
-		goal_base.yaws.append(self.yaw)
-
-		dx = end.x - start.x
-		dy = end.y - start.y
-		dz = end.z - start.z
-		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
-		goal_base.duration = rospy.Duration.from_sec(dt)
-
-		goal_base.start = rospy.Time(0)
-		self.client_base.send_goal(goal_base)
-		self.client_base.wait_for_result()
-
-		# Wait for 10s at location
-		rospy.loginfo("[NAV] Stopping for 10 seconds")
+		# Note: only safety is the fact that other request_path instance should end in 10s
 		rospy.sleep(rospy.Duration(10.0))
-
-		# Send return pose directly to contrail
-		rospy.loginfo("[NAV] Moving back to normal path")
-		goal_base2 = TrajectoryGoal()
-
-		start = Vector3(x=x2,y=y2,z=z2)
-		end = Vector3(x=x1,y=y1,z=z1)
-
-		goal_base2.positions.append(start)
-		goal_base2.positions.append(end)
-		goal_base2.yaws.append(self.yaw)
-		goal_base2.yaws.append(self.yaw)
-
-		dx = end.x - start.x
-		dy = end.y - start.y
-		dz = end.z - start.z
-		dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
-		goal_base2.duration = rospy.Duration.from_sec(dt)
-
-		goal_base2.start = rospy.Time(0)
-		self.client_base.send_goal(goal_base2)
-		self.client_base.wait_for_result()
-
 
 		rospy.loginfo("[NAV] Continuing on path...")
 
