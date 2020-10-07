@@ -91,6 +91,10 @@ class PathPlanner():
 		# Unregister anything that needs it here
 		self.sub_trig.unregister()
 		self.sub_pose.unregister()
+		self.sub_im_pose.unregister()
+		self.pub_path.unregister()
+		self.pub_im_pose.unregister()
+		self.pub_nav_status.unregister()
 
 	# Callback to store the current position at all times so it can be accessed later
 	def callback_pose(self, msg_in):
