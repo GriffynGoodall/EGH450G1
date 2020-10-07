@@ -7,6 +7,7 @@ import actionlib
 from actionlib_msgs.msg import GoalStatus
 
 from std_msgs.msg import Empty
+from std_msgs.msg import String
 from contrail_manager.msg import TrajectoryAction, TrajectoryGoal
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Vector3
@@ -73,9 +74,10 @@ class PathPlanner():
 		self.client_base = actionlib.SimpleActionClient(rospy.get_param("~contrail"), TrajectoryAction)
 		self.client_base.wait_for_server()
 
-		# Needs to be connected to contrail
+		# Set up publishers
 		self.pub_path = rospy.Publisher('~planned_path', Path, queue_size=10, latch=True)
 		self.pub_im_pose = rospy.Publisher('/imagery_pose', PoseStamped, queue_size=10, latch=True)
+		self.pub_nav_status = rospy.Publisher('~nav_status', String, queue_size=10, latch=True)
 
 		# Set up subscribers
 		self.sub_trig = rospy.Subscriber('~imagery_trigger', Empty, self.callback_trigger)
@@ -109,10 +111,11 @@ class PathPlanner():
 		self.stop = 1
 		self.client_base.cancel_goal()
 
-		# Publish new pose
+		# Publish new pose and nav status
 		self.im_msg.pose.position.x = self.im_msg.pose.position.x + 0.2
 		self.im_msg.pose.position.y = self.im_msg.pose.position.y + 0.2
 		self.pub_im_pose.publish(self.im_msg)
+		self.pub_nav_status.publish("Moving")
 
 		# Send imagery pose directly to contrail
 		# Note: only safety is the fact that other request_path instance should end in 2s
@@ -145,11 +148,13 @@ class PathPlanner():
 		self.client_base.wait_for_result()
 
 		# Wait for 10s at location
-		rospy.loginfo("[NAV] Stopping for 10 seconds")
-		rospy.sleep(rospy.Duration(10.0))
+		rospy.loginfo("[NAV] Stopping for 5 seconds")
+		self.pub_nav_status.publish("Waiting")
+		rospy.sleep(rospy.Duration(5.0))
 
 		# Send return pose directly to contrail
 		rospy.loginfo("[NAV] Moving back to normal path")
+		self.pub_nav_status.publish("Returning")
 		goal_base2 = TrajectoryGoal()
 
 		start = Vector3(x=x2,y=y2,z=z2)
@@ -227,6 +232,9 @@ class PathPlanner():
 				self.waypoints[i][2] = self.current_pos.z
 				self.stop = 0
 				return
+			
+			# Publish scanning status
+			self.pub_nav_status.publish("Scanning")
 
 			# Get required waypoints
 			i = self.wpIndex
@@ -238,31 +246,34 @@ class PathPlanner():
 			z2 = self.waypoints[i+1][2]		
 
 			# If no x or y movement, send manually to contrail (breadcrumb will fail)
-			if x1 == x2 and y1 == y2:
-				# if z1 == z2:
-				# 	# No movement at all, move on
-				# 	self.wpIndex = self.wpIndex + 1
-				# 	continue
-				# else:
-				goal_base = TrajectoryGoal()
+			#if x1 == x2 and y1 == y2:
+			if abs(x1-x2) < 0.1 and abs(y1-y2) < 0.1:
+				if abs(z1-z2) < 0.1:
+					# No movement at all, move on
+					rospy.loginfo("[NAV] Waypoints too close, moving to next waypoint")
+					self.wpIndex = self.wpIndex + 1
+					continue
+				else:
+					rospy.loginfo("[NAV] Only vertical movement, sending directly to contrail")
+					goal_base = TrajectoryGoal()
 
-				start = Vector3(x=x1,y=y1,z=z1)
-				end = Vector3(x=x2,y=y2,z=z2)
+					start = Vector3(x=x1,y=y1,z=z1)
+					end = Vector3(x=x2,y=y2,z=z2)
 
-				goal_base.positions.append(start)
-				goal_base.positions.append(end)
-				goal_base.yaws.append(self.yaw)
-				goal_base.yaws.append(self.yaw)
+					goal_base.positions.append(start)
+					goal_base.positions.append(end)
+					goal_base.yaws.append(self.yaw)
+					goal_base.yaws.append(self.yaw)
 
-				dx = end.x - start.x
-				dy = end.y - start.y
-				dz = end.z - start.z
-				dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
-				goal_base.duration = rospy.Duration.from_sec(dt)
+					dx = end.x - start.x
+					dy = end.y - start.y
+					dz = end.z - start.z
+					dt = sqrt((dx*dx)+(dy*dy)+(dz*dz)) / self.lvl
+					goal_base.duration = rospy.Duration.from_sec(dt)
 
-				goal_base.start = rospy.Time(0)
-				self.client_base.send_goal(goal_base)
-				self.client_base.wait_for_result()
+					goal_base.start = rospy.Time(0)
+					self.client_base.send_goal(goal_base)
+					self.client_base.wait_for_result()
 
 			else:	
 				#Request a path from breadcrumb
