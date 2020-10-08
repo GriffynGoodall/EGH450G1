@@ -17,6 +17,11 @@
 		<remap from="~nav_status" to="/nav_status" />
 		<!-- Pose state input of UAV -->
 		<remap from="~pose" to="/vicon/uavusrg1/pose" />
+		<!-- Occupancy Grid Input -->
+		<remap from="~grid_real" to="/grid" />
+		<!-- Occupancy Grid Output -->
+		<remap from="~grid_expanded" to="/grid_expanded"/>
+
 	</node>
 
 	<!-- Breadcrumb Node -->
@@ -26,6 +31,16 @@
 		<param name="obstacle_threshold" value="50" type="int"/>
 
 		<!-- Occupancy grid input -->
-		<remap from="~grid" to="/grid"/>
+		<!--remap from="~grid" to="/grid"/-->
+		<remap from="~grid" to="/grid_expanded"/>
 	</node>
+
+	<!-- Grid Expansion Node -->
+	<node pkg="egh450g1_code" type="expander" name="expander" clear_params="true" output="screen">
+		<!-- Occupancy Grid Input -->
+		<remap from="~grid_real" to="/grid/real" />
+		<!-- Occupancy Grid Output -->
+		<remap from="~grid_expanded" to="/grid/expanded"/>
+	</node>
+	
 </launch>

@@ -80,8 +80,6 @@ UAVUSREmulator::UAVUSREmulator() :
 	//Occupancy Grid
 	pub_grid_rand_.publish(generateGridData(true));
 	pub_grid_real_.publish(generateGridData(false));
-	
-	
 
 	//Pose
 	/*
@@ -537,7 +535,6 @@ nav_msgs::OccupancyGrid UAVUSREmulator::generateGridData( bool gen_random ) {
 	int g_obs_x = 20;
 	int g_obs_y = 30;
 	int g_obs_s = 4;
-
 
 	std::srand( std::time(0) );
 
