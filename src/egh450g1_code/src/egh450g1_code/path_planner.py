@@ -22,7 +22,7 @@ class PathPlanner():
 		squareSize = 3.0
 		trackWidth = 1.0
 		passes = int(ceil(squareSize/trackWidth) + 1)
-		self.height = 1.5
+		self.height = 1
 		self.yaw = 0.0
 		self.lvl = 0.1
 		
@@ -50,11 +50,15 @@ class PathPlanner():
 			self.waypoints[i*2+1] = [x, y2, self.height, self.yaw]
 
 		# Add starting waypoints and ending waypoints	
-		self.waypoints.insert(0, [0, 0, self.height, self.yaw])
-		self.waypoints.insert(0, [0, 0, 0, self.yaw])
+		# self.waypoints.insert(0, [0, 0, self.height, self.yaw])
+		# self.waypoints.insert(0, [0, 0, 0, self.yaw])
+		self.waypoints.insert(0, [-1, -1, self.height, self.yaw])
+		self.waypoints.insert(0, [-1, -1, 0, self.yaw])
 
-		self.waypoints.append([0, 0, self.height, self.yaw])
-		self.waypoints.append([0, 0, -0.2, self.yaw])
+		# self.waypoints.append([0, 0, self.height, self.yaw])
+		# self.waypoints.append([0, 0, -0.2, self.yaw])
+		self.waypoints.append([-1, -1, self.height, self.yaw])
+		self.waypoints.append([-1, -1, -0.2, self.yaw])
 
 		# Manual Waypoints	
 		# self.waypoints = [[0.0, 0.0, 1.5, 0.0], [0.5, 0.2, 1.5, 0.0], [0.0, -0.5, 1.5, 0.0],\
